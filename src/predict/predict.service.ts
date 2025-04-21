@@ -9,13 +9,13 @@ export class PredictService implements OnModuleInit {
   async onModuleInit() {
     const modelPath = `file://${join(__dirname, '../../modelo/model.json')}`;
     this.model = await tf.loadLayersModel(modelPath);
-    console.log('✅ Modelo cargado correctamente');
+    console.log('Modelo cargado correctamente');
   }
 
   async predictImageBuffer(buffer: Buffer): Promise<string> {
     const modelPath = `file://${join(__dirname, '../../modelo/model.json')}`;
     this.model = await tf.loadLayersModel(modelPath);
-    console.log('✅ Modelo cargado correctamente');
+    console.log('Modelo cargado correctamente');
 
     const imageTensor = tf.node
       .decodeImage(buffer, 3)
