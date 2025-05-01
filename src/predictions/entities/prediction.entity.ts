@@ -36,7 +36,7 @@ import {
     validate: boolean;
 
     @Column({ type: 'text', nullable: true, name: 'comment' })
-    comment: string;
+    comment: string | null;
   
     @ManyToOne(() => Patient, (patient) => patient.predictions)
     patient: Patient;
