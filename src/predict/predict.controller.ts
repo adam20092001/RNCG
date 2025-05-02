@@ -33,7 +33,7 @@ export class PredictController {
     if (!file) {
       throw new Error('No se recibió imagen');
     }
-    console.log('📩 Request recibido en controlador')
+    console.log('Request recibido en controlador')
     const result = await this.predictService.predictAndSave(
       file.filename,
       userId,
@@ -41,7 +41,7 @@ export class PredictController {
     );
 
     return {
-      message: '✅ Predicción guardada con éxito',
+      message: 'Predicción guardada con éxito',
       data: result,
     };
   }
