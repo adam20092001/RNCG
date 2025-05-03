@@ -16,8 +16,10 @@ export class User {
   @Column({ unique: true })
   mail: string;
 
-  @Column()
+  @Column({ type: 'text' })
   password: string;
+
+
 //EVALUAR LAS RELACIONES
   @OneToMany(() => Patient, (patient) => patient.user)
   patients: Patient[];

@@ -5,9 +5,9 @@ import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  app.enableCors();
   // 👇 Agrega esta línea para servir archivos estáticos
-  app.use('/public', express.static(join(__dirname, '..', 'public')));
+  app.use('/public', express.static(join(__dirname, '..', 'uploads')));
 
   await app.listen(3000);
 }

@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PatientsModule } from './patients/patients.module';
 import { UsersModule } from './users/users.module';
 import { PredictionsModule } from './predictions/predictions.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { PredictionsModule } from './predictions/predictions.module';
     PredictModule,
     PatientsModule,
     UsersModule,
-    PredictionsModule
+    PredictionsModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

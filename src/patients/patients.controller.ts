@@ -30,5 +30,9 @@ export class PatientsController {
   delete(@Param('id') id: number) {
     return this.patientsService.delete(+id);
   }
+  @Get('user/:id')
+  findByUser(@Param('id') id: number) {
+    return this.patientsService.findByUser(+id);
+  }
 }
 

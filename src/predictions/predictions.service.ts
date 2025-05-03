@@ -92,9 +92,14 @@ export class PredictionsService {
       if (!prediction) {
         throw new NotFoundException(`Predicción con ID ${id} no encontrada`);
       }
-      prediction.validate = true;
-      if (comment) {
-        prediction.comment = comment;
+      if (prediction.validate) {
+        prediction.validate = false;
+        prediction.comment = null;
+      } else {
+        prediction.validate = true;
+        if (comment) {
+          prediction.comment = comment;
+        }
       }
       return this.predictionRepo.save(prediction);
     }

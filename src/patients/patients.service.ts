@@ -41,4 +41,11 @@ export class PatientsService {
   async delete(id: number): Promise<void> {
     await this.patientRepo.delete(id);
   }
+  async findByUser(userId: number): Promise<Patient[]> {
+    return this.patientRepo.find({
+      where: { user: { id: userId } },
+      relations: ['user'], // 🔄 incluye relación para acceder al usuario
+      order: { id: 'ASC' }
+    });
+  }
 }
