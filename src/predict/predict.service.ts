@@ -47,8 +47,7 @@ export class PredictService implements OnModuleInit {
       'LESIONES BENIGNAS': result[1],
       NORMAL: result[2],
     };
-    console.log('Guardando predicción...')
-    return this.predictionsService.create({
+    const predictionsave = await this.predictionsService.create({
       result: resultLabel,
       score,
       image: imagePath,
@@ -56,6 +55,10 @@ export class PredictService implements OnModuleInit {
       userId,
       patientId,
     });
+    return {
+      message: '✅ Predicción completada correctamente',
+      predictionId: predictionsave.id, //clave para redirigir luego
+    };
   }
   
 }

@@ -56,6 +56,12 @@ export class PredictionsService {
       }
       
     }
+    async findById(id: number) {
+      return await this.predictionRepo.findOne({
+        where: { id },
+        relations: ['user', 'patient'], // solo si necesitas incluir relaciones
+      });
+    }    
     async findByUser(userId: number): Promise<Prediction[]> {
       return this.predictionRepo.find({
         where: { user: { id: userId } },

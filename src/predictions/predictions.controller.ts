@@ -4,6 +4,11 @@ import { PredictionsService } from './predictions.service';
 @Controller('predictions')
 export class PredictionsController {
   constructor(private readonly predictionsService: PredictionsService) {}
+  @Get(':id')
+  async findOne(@Param('id') id: number) {
+    const prediction = await this.predictionsService.findById(id);
+    return prediction;
+  }
   @Get('user/:id')
   findByUser(@Param('id') id: number) {
     return this.predictionsService.findByUser(+id); // predicciones solo del médico con ID dado

@@ -2,13 +2,16 @@ import { ConflictException, Injectable, NotFoundException, UnauthorizedException
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { sendVerificationEmail } from 'src/mailer.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
+    private readonly jwtService: JwtService,
   ) {}
 
   async login(mail: string, password: string) {
@@ -24,6 +27,10 @@ export class AuthService {
       throw new UnauthorizedException('Contraseña incorrecta');
     }
 
+    if (!user.emailVerified) {
+      throw new UnauthorizedException('Debes verificar tu correo para iniciar sesión');
+    }
+  
     return {
       message: 'Inicio de sesión exitoso',
       user: {
@@ -46,8 +53,17 @@ export class AuthService {
       mail: data.mail,
       password: hashedPassword,
     });
+    const savedUser = await this.userRepo.save(newUser);
+    //return await this.userRepo.save(newUser);
 
-    return await this.userRepo.save(newUser);
+      // Genera token de verificación
+    const token = this.jwtService.sign({ userId: savedUser.id });
+
+    // Envía el correo
+    await sendVerificationEmail(savedUser.mail, token);
+
+    return { message: 'Usuario registrado. Verifica tu correo.' };
+
   }
   async resetPassword(mail: string, newPassword: string): Promise<boolean> {
     const user = await this.userRepo.findOneBy({ mail });

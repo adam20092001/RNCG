@@ -19,6 +19,9 @@ export class User {
   @Column({ type: 'text' })
   password: string;
 
+  @Column({ default: false })
+  emailVerified: boolean;
+
 
 //EVALUAR LAS RELACIONES
   @OneToMany(() => Patient, (patient) => patient.user)
