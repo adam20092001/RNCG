@@ -14,14 +14,14 @@ import * as multerS3 from 'multer-s3';
 const s3 = new AWS.S3({
   region: process.env.AWS_REGION,
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   },
 });
 
 const storage = multerS3({
   s3,
-  bucket: process.env.AWS_S3_BUCKET,
+  bucket: process.env.AWS_S3_BUCKET!,
   acl: 'public-read',
   contentType: multerS3.AUTO_CONTENT_TYPE,
   key: (req, file, cb) => {
@@ -29,6 +29,10 @@ const storage = multerS3({
     cb(null, uniqueName);
   },
 });
+interface S3MulterFile extends Express.Multer.File {
+  key: string;
+  location: string;
+}
 
 @Controller('predict')
 export class PredictController {
@@ -37,7 +41,8 @@ export class PredictController {
   @Post()
   @UseInterceptors(FileInterceptor('image', {  storage }))
   async predict(
-    @UploadedFile() file: Express.Multer.File,
+    
+    @UploadedFile() file: S3MulterFile,
     @Body('patientId') patientId: number,
     @Body('userId') userId: number, // Por ahora, lo pasas manualmente
   ) {
