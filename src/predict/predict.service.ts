@@ -5,6 +5,7 @@ import { join } from 'path';
 import { PredictionsService } from 'src/predictions/predictions.service';
 import { PatientsService } from 'src/patients/patients.service';
 import { UsersService } from 'src/users/users.service';
+import axios from 'axios';
 
 @Injectable()
 export class PredictService implements OnModuleInit {
@@ -24,8 +25,13 @@ export class PredictService implements OnModuleInit {
 
   // Método mejorado: predice y guarda
   async predictAndSave(imagePath: string, userId: number, patientId: number) {
-    const fullImagePath = join(__dirname, '../../uploads', imagePath);
-    const buffer = await readFile(fullImagePath); // lee el archivo físico
+    const bucket = process.env.AWS_S3_BUCKET;
+    const region = process.env.AWS_REGION;
+    const imageUrl = `https://${bucket}.s3.${region}.amazonaws.com/${imageKey}`;
+
+    const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+    const buffer = Buffer.from(response.data);
+    //const buffer = await readFile(fullImagePath); // lee el archivo físico
     const imageTensor = tf.node
       .decodeImage(buffer, 3)
       .resizeBilinear([224, 224])
