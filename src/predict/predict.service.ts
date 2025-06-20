@@ -55,7 +55,7 @@ export class PredictService implements OnModuleInit {
     const predictionsave = await this.predictionsService.create({
       result: resultLabel,
       score,
-      image: imageKey,
+      image: imageUrl,
       probabilities,
       userId,
       patientId,
