@@ -35,8 +35,7 @@ export class PredictController {
   constructor(private readonly predictService: PredictService) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('image', {
-    storage }))
+  @UseInterceptors(FileInterceptor('image', {  storage }))
   async predict(
     @UploadedFile() file: Express.Multer.File,
     @Body('patientId') patientId: number,
@@ -45,7 +44,25 @@ export class PredictController {
     if (!file) {
       throw new Error('No se recibió imagen');
     }
-    console.log('📦 Archivo recibido:', file);
+try {
+  console.log('📥 Archivo recibido:', file);
+  const result = await this.predictService.predictAndSave(
+    file.key,
+    userId,
+    patientId,
+  );
+  return {
+    message: 'Predicción guardada con éxito',
+    imageUrl: file.location,
+    data: result,
+  };
+} catch (error) {
+  console.error('❌ Error en controlador:', error);
+  throw error;
+}
+
+
+/*     console.log('📦 Archivo recibido:', file);
     const result = await this.predictService.predictAndSave(
       file.key,
       userId,
@@ -57,5 +74,5 @@ export class PredictController {
       imageUrl: file.location,
       data: result,
     };
-  }
-}
+  } */
+}}
