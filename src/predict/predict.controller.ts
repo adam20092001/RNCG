@@ -35,7 +35,6 @@ const s3 = new AWS.S3({
 const storage = multerS3({
   s3,
   bucket,
-  acl: 'public-read',
   contentType: multerS3.AUTO_CONTENT_TYPE,
   key: (req, file, cb) => {
     const uniqueName =
