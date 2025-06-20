@@ -1,6 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as tf from '@tensorflow/tfjs-node';
-import { readFile } from 'fs/promises';
 import { join } from 'path';
 import { PredictionsService } from 'src/predictions/predictions.service';
 import { PatientsService } from 'src/patients/patients.service';
@@ -24,7 +23,7 @@ export class PredictService implements OnModuleInit {
   }
 
   // Método mejorado: predice y guarda
-  async predictAndSave(imagePath: string, userId: number, patientId: number) {
+  async predictAndSave(imageKey: string, userId: number, patientId: number) {
     const bucket = process.env.AWS_S3_BUCKET;
     const region = process.env.AWS_REGION;
     const imageUrl = `https://${bucket}.s3.${region}.amazonaws.com/${imageKey}`;
@@ -56,7 +55,7 @@ export class PredictService implements OnModuleInit {
     const predictionsave = await this.predictionsService.create({
       result: resultLabel,
       score,
-      image: imagePath,
+      image: imageKey,
       probabilities,
       userId,
       patientId,
