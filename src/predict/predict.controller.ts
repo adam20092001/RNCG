@@ -45,7 +45,7 @@ export class PredictController {
     if (!file) {
       throw new Error('No se recibió imagen');
     }
-    console.log('Request recibido en controlador', file.location)
+    console.log('📦 Archivo recibido:', file);
     const result = await this.predictService.predictAndSave(
       file.key,
       userId,
