@@ -79,19 +79,4 @@ try {
   console.error('❌ Error en controlador:', error);
   throw error;
 }
-
-
-/*     console.log('📦 Archivo recibido:', file);
-    const result = await this.predictService.predictAndSave(
-      file.key,
-      userId,
-      patientId,
-    );
-
-    return {
-      message: 'Predicción guardada con éxito',
-      imageUrl: file.location,
-      data: result,
-    };
-  } */
 }}

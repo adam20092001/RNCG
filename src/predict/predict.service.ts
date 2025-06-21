@@ -17,9 +17,13 @@ export class PredictService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    const modelPath = `file://${join(__dirname, '../../modelo/model.json')}`;
-    this.model = await tf.loadLayersModel(modelPath);
-    console.log('Modelo cargado correctamente');
+    const bucket = process.env.AWS_S3_BUCKET_MODEL;
+    const region = process.env.AWS_REGION;
+    const modelKey = process.env.MODEL_S3_KEY;
+
+    const modelUrl = `https://${bucket}.s3.${region}.amazonaws.com/${modelKey}`;    
+    this.model = await tf.loadLayersModel(modelUrl);
+    console.log('Modelo cargado DESDE S3:', modelUrl);
   }
 
   // Método mejorado: predice y guarda
