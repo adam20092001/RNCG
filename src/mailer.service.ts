@@ -1,4 +1,6 @@
 import * as nodemailer from 'nodemailer';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -9,7 +11,8 @@ const transporter = nodemailer.createTransport({
 });
 
 export const sendVerificationEmail = async (to: string, token: string) => {
-  const url = `http://localhost:3000/auth/verify-email?token=${token}`;
+  const frontendUrl = process.env.FRONTEND_URL;
+  const url = `${frontendUrl}/auth/verify-email?token=${token}`;
   await transporter.sendMail({
     from: '"GastroSAI" <adam20092001@gmail.com>',
     to,
