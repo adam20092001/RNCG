@@ -28,7 +28,7 @@ export class PredictService implements OnModuleInit {
 
   // Método mejorado: predice y guarda
   async predictAndSave(imageKey: string, userId: number, patientId: number) {
-    const bucket = process.env.AWS_S3_BUCKET;
+    const bucket = 'rncg-upload';
     const region = process.env.AWS_REGION;
     const imageUrl = `https://${bucket}.s3.${region}.amazonaws.com/${imageKey}`;
 
