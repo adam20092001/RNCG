@@ -70,10 +70,12 @@ export class AuthService {
     if (!user) {
         throw new NotFoundException('Usuario no encontrado');
       }
-
+    else{
     const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.mail = mail;
     user.password = hashedPassword;
     await this.userRepo.save(user);
+    }
     return true;
   }
 }
