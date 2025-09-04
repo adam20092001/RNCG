@@ -27,11 +27,12 @@ export class PatientsService {
     return patient;
   }
   async create(data: Partial<Patient>): Promise<Patient> {
-    const exists = await this.patientRepo.findOne({ where: { dni: data.dni } });
+    /* const exists = await this.patientRepo.findOne({ where: { dni: data.dni } });
     if (exists) {
       throw new ConflictException('El DNI ya está registrado');
-    }
+    } */
     const newPatient = this.patientRepo.create(data);
+    newPatient.disable = false; // valor por defecto
     return this.patientRepo.save(newPatient);
   }
   async update(id: number, data: Partial<Patient>): Promise<Patient> {
