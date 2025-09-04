@@ -2,6 +2,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, OneToMany } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Prediction } from 'src/predictions/entities/prediction.entity';
+import { bool } from 'aws-sdk/clients/signer';
 
 @Entity()
 export class Patient {
@@ -20,8 +21,11 @@ export class Patient {
   @Column()
   sex: string;
 
-  @Column({ unique: true })
+  @Column()
   dni: string;
+
+  @Column()
+  disable: boolean;
 //EVALUAR LAS RELACIONES 
   @ManyToOne(() => User, (user) => user.patients)
   user: User;
