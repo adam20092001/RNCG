@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Patient } from 'src/patients/entities/patient.entity';
 import { Prediction } from 'src/predictions/entities/prediction.entity';
+import { Notification } from 'src/notifications/entities/notification.entity';
 
 @Entity()
 export class User {
@@ -29,4 +30,8 @@ export class User {
 
   @OneToMany(() => Prediction, (prediction) => prediction.user)
   predictions: Prediction[];
+
+  @OneToMany(() => Notification, notif => notif.user)
+  notifications: Notification[];
+
 }

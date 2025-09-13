@@ -32,7 +32,7 @@ export class PatientsService {
       throw new ConflictException('El DNI ya está registrado');
     } */
     const newPatient = this.patientRepo.create(data);
-    newPatient.disable = false; // valor por defecto
+
     return this.patientRepo.save(newPatient);
   }
   async update(id: number, data: Partial<Patient>): Promise<Patient> {
