@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { sendVerificationEmail } from 'src/mailer.service';
+import { sendPasswordResetEmail, sendVerificationEmail } from 'src/mailer.service';
 import { ConfigService } from '@nestjs/config';
 
 
@@ -85,7 +85,7 @@ export class AuthService {
     const resetLink = `${frontendUrl}/reset-password?token=${token}`;
 
     // Aquí usas tu servicio de correos
-    await sendVerificationEmail(user.mail, resetLink);
+    await sendPasswordResetEmail(user.mail, resetLink);
 
     return { message: '📨 Se ha enviado un enlace de recuperación al correo proporcionado' };
   }
