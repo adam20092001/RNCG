@@ -80,12 +80,8 @@ export class AuthService {
       { expiresIn: '15m' }
     );
 
-    // Enlace que recibiría el usuario
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL');
-    const resetLink = `${frontendUrl}/reset-password?token=${token}`;
-
     // Aquí usas tu servicio de correos
-    await sendPasswordResetEmail(user.mail, resetLink);
+    await sendPasswordResetEmail(user.mail, token);
 
     return { message: '📨 Se ha enviado un enlace de recuperación al correo proporcionado' };
   }
