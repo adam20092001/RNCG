@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Patient } from 'src/patients/entities/patient.entity';
 import { NotFoundException } from '@nestjs/common';
+import { NotificationsService } from '../notifications/notifications.service';
+
 
 @Injectable()
 export class PredictionsService {
@@ -17,6 +19,7 @@ export class PredictionsService {
     
     @InjectRepository(Patient)
     private readonly patientRepo: Repository<Patient>,
+    private readonly notificationsService: NotificationsService,
   ) {} 
     async create(data: {
       result: string;
@@ -49,7 +52,18 @@ export class PredictionsService {
       });
     
       try {
-        return await this.predictionRepo.save(prediction);
+        const savedPrediction = await this.predictionRepo.save(prediction);
+        if (data.probabilities.EGC > 0.8) {
+          await this.notificationsService.create(
+            user.id,
+            'Alerta de diagnóstico',
+            `El análisis del paciente ${patient.id} muestra un ${(
+              data.probabilities.EGC * 100
+              ).toFixed(2)}% de probabilidad de EGC. Revisar inmediatamente.`
+          );
+        }
+        return savedPrediction;
+        //return await this.predictionRepo.save(prediction);  //logica anterior
       } catch (error) {
         console.error('Error al guardar predicción:', error);
         throw new Error('Error al guardar predicción en la base de datos');
