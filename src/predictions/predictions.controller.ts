@@ -34,4 +34,10 @@ export class PredictionsController {
   ) {
     return this.predictionsService.validatePrediction(+id, body.comment);
   }
+  @Get('pending/count')
+  async getPendingCount() {
+    const count = await this.predictionsService.getPendingCount();
+  return { pendingCount: count };
+}
+
 }

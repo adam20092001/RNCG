@@ -57,7 +57,7 @@ export class PredictionsService {
           await this.notificationsService.create(
             user.id,
             'Alerta de diagnóstico',
-            `El análisis del paciente ${patient.id} muestra un ${(
+            `El análisis del paciente ${patient.lastname} ${patient.name} muestra un ${(
               data.probabilities.EGC * 100
               ).toFixed(2)}% de probabilidad de EGC. Revisar inmediatamente.`
           );
@@ -123,4 +123,8 @@ export class PredictionsService {
       }
       return this.predictionRepo.save(prediction);
     }
+    async getPendingCount(): Promise<number> {
+      return this.predictionRepo.count({ where: { validate: false } });
+    }
+
 }
