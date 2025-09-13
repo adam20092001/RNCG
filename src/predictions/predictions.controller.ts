@@ -37,7 +37,6 @@ export class PredictionsController {
   @Get('pending/count')
   async getPendingCount() {
     const count = await this.predictionsService.getPendingCount();
-  return { pendingCount: count };
+    return { pendingCount: count };
 }
-
 }
