@@ -5,6 +5,8 @@ import { User } from 'src/users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { sendVerificationEmail } from 'src/mailer.service';
+import { ConfigService } from '@nestjs/config';
+
 
 @Injectable()
 export class AuthService {
@@ -12,7 +14,8 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
     private readonly jwtService: JwtService,
-  ) {}
+    private readonly configService: ConfigService,
+  ) { }
 
   async login(mail: string, password: string) {
     const user = await this.userRepo.findOneBy({ mail });
@@ -30,7 +33,7 @@ export class AuthService {
     if (!user.emailVerified) {
       throw new UnauthorizedException('Debes verificar tu correo para iniciar sesión');
     }
-  
+
     return {
       message: 'Inicio de sesión exitoso',
       user: {
@@ -56,7 +59,7 @@ export class AuthService {
     const savedUser = await this.userRepo.save(newUser);
     //return await this.userRepo.save(newUser);
 
-      // Genera token de verificación
+    // Genera token de verificación
     const token = this.jwtService.sign({ userId: savedUser.id });
 
     // Envía el correo
@@ -65,17 +68,45 @@ export class AuthService {
     return { message: 'Usuario registrado. Verifica tu correo.' };
 
   }
-  async resetPassword(mail: string, newPassword: string): Promise<boolean> {
+  async forgotPassword(mail: string): Promise<{ message: string }> {
     const user = await this.userRepo.findOneBy({ mail });
     if (!user) {
-        throw new NotFoundException('Usuario no encontrado');
-      }
-    else{
+      throw new NotFoundException('El correo no se encuentra registrado');
+    }
+
+    // Genera token temporal (15 minutos de validez)
+    const token = this.jwtService.sign(
+      { userId: user.id },
+      { expiresIn: '15m' }
+    );
+
+    // Enlace que recibiría el usuario
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL');
+    const resetLink = `${frontendUrl}/reset-password?token=${token}`;
+
+    // Aquí usas tu servicio de correos
+    await sendVerificationEmail(user.mail, resetLink);
+
+    return { message: '📨 Se ha enviado un enlace de recuperación al correo proporcionado' };
+  }
+  async resetPasswordWithToken(token: string, newPassword: string): Promise<boolean> {
+    let payload: any;
+    try {
+      payload = this.jwtService.verify(token); // valida firma y expiración
+    } catch (e) {
+      throw new UnauthorizedException('El enlace de recuperación no es válido o ha expirado');
+    }
+
+    const user = await this.userRepo.findOneBy({ id: payload.userId });
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    // Hashear y guardar nueva contraseña
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user.mail = mail;
     user.password = hashedPassword;
     await this.userRepo.save(user);
-    }
+
     return true;
   }
 }
