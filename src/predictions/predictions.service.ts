@@ -123,8 +123,13 @@ export class PredictionsService {
       }
       return this.predictionRepo.save(prediction);
     }
-    async getPendingCount(): Promise<number> {
-      return this.predictionRepo.count({ where: { validate: false } });
+    async getPendingCount(userId: number): Promise<number> {
+      return this.predictionRepo.count({
+        where: {
+          validate: false,
+          user: { id: userId }  // 👈 filtra por médico
+        },
+        relations: ['user'], // necesario para que TypeORM pueda filtrar
+      });
     }
-
 }
