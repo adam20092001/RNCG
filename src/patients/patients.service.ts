@@ -49,4 +49,14 @@ export class PatientsService {
       order: { id: 'ASC' }
     });
   }
+  // listar solo paciente habilitado
+  async findByUserEnabled(userId: number): Promise<Patient[]> {
+    return this.patientRepo.find({
+      where: { user: { id: userId },
+      disable: false
+      },
+      relations: ['user'], // 🔄 incluye relación para acceder al usuario
+      order: { id: 'ASC' }
+    });
+  }
 }

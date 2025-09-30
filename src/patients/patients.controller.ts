@@ -34,5 +34,10 @@ export class PatientsController {
   findByUser(@Param('id') id: number) {
     return this.patientsService.findByUser(+id);
   }
+  // listar solo paciente habilitado
+    @Get('usere/:id')
+  findByUserEnabled(@Param('id') id: number) {
+    return this.patientsService.findByUserEnabled(+id);
+  }
 }
 
