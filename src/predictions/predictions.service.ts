@@ -59,7 +59,7 @@ export class PredictionsService {
             'Alerta de diagnóstico',
             `El análisis del paciente ${patient.lastname} ${patient.name} muestra un ${(
               data.probabilities.EGC * 100
-              ).toFixed(2)}% de probabilidad de EGC. Revisar inmediatamente.`, patient.id
+              ).toFixed(2)}% de probabilidad de EGC. Revisar inmediatamente.`, prediction.id
           );
         }
         return savedPrediction;
